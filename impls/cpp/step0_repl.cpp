@@ -6,21 +6,19 @@ string rep() {
   cout << "user> ";
   string input;
   getline(cin, input);
-  cout << endl;
   cout << input << endl;
+
   return input;
 }
 
-int main()
-{
-  while (true)
-  {
+int main() {
+  while (true) {
     rep();
-    if (cin.eof())
-    {
+    if (cin.eof()) {
       break;
     }
     cin.clear();
   }
+
   return 0;
 }

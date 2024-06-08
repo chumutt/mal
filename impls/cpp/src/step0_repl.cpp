@@ -5,9 +5,7 @@ using namespace std;
 using namespace linenoise;
 
 string R(string s) { return s; }
-
 string E(string s) { return s; }
-
 string P(string s) { return s; }
 
 string r(string s) {
@@ -21,9 +19,9 @@ int main() {
   string s;
   for (;;) {
     auto quit = Readline("user> ", s);
+    AddHistory(s.c_str());
     if (quit) { // ctrl+d to quit
       break;
-      AddHistory(s.c_str());
     }
     cout << r(s) << endl;
     cin.clear();

@@ -23,9 +23,9 @@ int main() {
     auto quit = Readline("user> ", s);
     if (quit) { // ctrl+d to quit
       break;
-      cout << r(s) << endl;
       AddHistory(s.c_str());
     }
+    cout << r(s) << endl;
     cin.clear();
   }
   SaveHistory(history_path);

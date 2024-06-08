@@ -12,18 +12,19 @@ string P(string s) { return s; }
 void p() { cout << "user> "; }
 
 string r(string s) {
-  p();
   P(R(E(s)));
-  return s;
+  return P(s);
 }
 
 int main() {
+  const auto history_path = "history.txt";
   string s;
   for (;;) {
-    r(s);
-    if (cin.eof()) { // ctrl+d to quit
+    p();
+    if (!getline(cin, s)) { // ctrl+d to quit
       break;
     }
+    cout << r(s) << endl;
     cin.clear();
   }
   return 0;

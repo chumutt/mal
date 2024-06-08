@@ -1,30 +1,32 @@
 #include "./../linenoise.hpp"
+#include "reader.hpp"
 #include <iostream>
 #include <string>
 using namespace std;
+using namespace linenoise;
 
 string R(string s) { return s; }
-
 string E(string s) { return s; }
-
 string P(string s) { return s; }
 
-void p() { cout << "user> "; }
-
 string r(string s) {
-  p();
   P(R(E(s)));
-  return s;
+  return P(s);
 }
 
 int main() {
+  const auto history_path = "history.txt";
+  LoadHistory(history_path);
   string s;
   for (;;) {
-    r(s);
-    if (cin.eof()) { // ctrl+d to quit
+    auto quit = Readline("user> ", s);
+    AddHistory(s.c_str());
+    if (quit) { // ctrl+d to quit
       break;
     }
+    cout << r(s) << endl;
     cin.clear();
   }
+  SaveHistory(history_path);
   return 0;
 }

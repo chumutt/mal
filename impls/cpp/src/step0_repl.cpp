@@ -2,14 +2,13 @@
 #include <iostream>
 #include <string>
 using namespace std;
+using namespace linenoise;
 
 string R(string s) { return s; }
 
 string E(string s) { return s; }
 
 string P(string s) { return s; }
-
-void p() { cout << "user> "; }
 
 string r(string s) {
   P(R(E(s)));
@@ -18,14 +17,17 @@ string r(string s) {
 
 int main() {
   const auto history_path = "history.txt";
+  LoadHistory(history_path);
   string s;
   for (;;) {
-    p();
-    if (!getline(cin, s)) { // ctrl+d to quit
+    auto quit = Readline("user> ", s);
+    if (quit) { // ctrl+d to quit
       break;
+      cout << r(s) << endl;
+      AddHistory(s.c_str());
     }
-    cout << r(s) << endl;
     cin.clear();
   }
+  SaveHistory(history_path);
   return 0;
 }

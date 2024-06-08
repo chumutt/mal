@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+#include <optional>
 #include <string>
 #include <string_view>
 using namespace std;
@@ -6,17 +8,95 @@ using namespace std;
 class Tokenizer {
 public:
   Tokenizer(string &input) : m_input{input} {}
-  string_view next() {
+  optional<string_view> next() {
+    auto view = string_view(m_input);
     while (m_index < m_input.length()) {
       char c = m_input.at(m_index);
-
       switch (c) {
-      case ' ':
-        // TODO
+      case ' ':  // space
+      case '\t': // tab
+      case '\n': // new line
+      case ',':  // comma
         break;
+      case '~': {
+        if (m_index + 1 < m_input.length() && m_input.at(m_index + 1) == '@') {
+          return view.substr(m_index++, 2);
+          return view.substr(m_index, 1);
+        }
       }
-      ++m_index;
+      case '[':  // open bracket
+      case ']':  // closed bracket
+      case '{':  // open curly
+      case '}':  // closed curly
+      case '(':  // open paren
+      case ')':  // closed paren
+      case '\'': // single quote
+      case '`':  // backtick
+      case '^':  // caret
+      case '@':
+        return view.substr(m_index, 1);
+      case '"': {
+        size_t start = m_index;
+        ++m_index;
+        while (m_index < m_input.length()) {
+          c = m_input.at(m_index);
+          switch (c) {
+          case '"':
+            return view.substr(start, m_input.length() - m_index);
+          case '\\':
+            ++m_index;
+            break;
+          }
+          ++m_index;
+        }
+        // If no ending double quote to pair with first double quote,
+        // return whatever is left & EOF.
+        cout << "EOF\n";
+        return view.substr(start, m_input.length() - m_index);
+      }
+      case ';': {
+        size_t start = m_index;
+        while (m_index < m_input.length()) {
+          c = m_input.at(m_index);
+          if (c == '\n')
+            break;
+          ++m_index;
+        }
+        return view.substr(start, m_input.length() - m_index);
+      }
+      default: {
+        size_t start = m_index;
+        bool done = false;
+        while (!done && m_index < m_input.length()) {
+          c = m_input.at(m_index);
+          switch (c) {
+          case ' ':  // space
+          case '\t': // tab
+          case '\n': // new line
+          case '[':
+          case ']':
+          case '{':
+          case '}':
+          case '(':
+          case ')':
+          case '\'':
+          case '"':
+          case '`':
+          case ',':
+          case ';':
+            done = true;
+            break;
+          default:
+            ++m_index;
+          }
+        }
+        return view.substr(start, m_input.length() - m_index);
+      }
+      }
+      ++m_index; // skip whitespace
     }
+    return {}; // return nothing if no token (a.k.a. why 'optional<string_view>
+               // next()...' is necessary).
   }
 
 private:

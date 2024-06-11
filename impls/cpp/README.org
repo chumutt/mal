@@ -1,9 +1,53 @@
+#+options: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+options: broken-links:nil c:nil creator:nil d:(not "LOGBOOK") date:t e:t
+#+options: email:nil expand-links:t f:t inline:t num:t p:nil pri:nil prop:nil
+#+options: stat:t tags:t tasks:t tex:t timestamp:t title:t toc:t todo:t |:t
+#+title: README
+#+date: <2024-06-10 Mon>
+#+author: chu the pup
+#+email: chufilthymutt@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 29.3 (Org mode 9.7)
+#+created: <2024-06-10 Mon>
+#+cite_export: nil
+* Build
+#+name: build
+#+begin_src sh :shebang #!/usr/bin/env sh :tangle ./build
+make ./
+#+end_src
+* Makefile
+#+name: Makefile
+#+begin_src makefile :tangle ./Makefile :session make
+##
+# chu lisp
+#
+# @file
+# @version 0.2
+
+CXXFLAGS ?= -g -Wall -Wextra -Werror
+
+step0_repl: src/step0_repl.cpp
+	$(CXX) $(CXXFLAGS) -o step0_repl src/step0_repl.cpp
+
+step1_read_print: src/step1_read_print.cpp
+	$(CXX) $(CXXFLAGS) -o step1_read_print src/step1_read_print.cpp
+# end
+#+end_src
+* Run
+#+name: run
+#+begin_src bash :shebang #!/bin/bash :tangle ./run
+exec $(dirname $0)/${STEP:-stepA_mal} "${@}"
+#+end_src
+* The Reader
+#+name: reader.hpp
+#+begin_src cpp :tangle ./src/reader.hpp
 #pragma once
 #include <iostream>
 #include <optional>
 #include <string>
 #include <string_view>
-using namespace std;
 
 class Tokenizer {
 public:
@@ -107,3 +151,81 @@ private:
 // Value *read_str(string &input) {
 //   // TODO: tokenize -> ast -> return ast
 // }
+#+end_src
+
+#+RESULTS: reader.hpp
+
+* Step 0: REPL
+#+name: step0_repl.cpp
+#+begin_src cpp :tangle ./src/step0_repl.cpp
+#include "./../linenoise.hpp"
+#include <iostream>
+#include <string>
+using namespace std;
+using namespace linenoise;
+
+string R(string s) { return s; }
+string E(string s) { return s; }
+string P(string s) { return s; }
+
+string r(string s) {
+  P(R(E(s)));
+  return P(s);
+}
+
+int main() {
+  const auto history_path = "history.txt";
+  LoadHistory(history_path);
+  string s;
+  for (;;) {
+    auto quit = Readline("user> ", s);
+    AddHistory(s.c_str());
+    if (quit) { // ctrl+d to quit
+      break;
+    }
+    cout << r(s) << endl;
+    cin.clear();
+  }
+  SaveHistory(history_path);
+  return 0;
+}
+#+end_src
+
+#+RESULTS: step0_repl.cpp
+
+* Step 1: READ and PRINT
+#+name: step1_read_print.cpp
+#+begin_src cpp :tangle ./src/step1_read_print.cpp
+#include "./../linenoise.hpp"
+#include "reader.hpp"
+#include <iostream>
+#include <string>
+using namespace std;
+using namespace linenoise;
+
+string R(string s) { return s; }
+string E(string s) { return s; }
+string P(string s) { return s; }
+
+string r(string s) {
+  P(R(E(s)));
+  return P(s);
+}
+
+int main() {
+  const auto history_path = "history.txt";
+  LoadHistory(history_path);
+  string s;
+  for (;;) {
+    auto quit = Readline("user> ", s);
+    AddHistory(s.c_str());
+    if (quit) { // ctrl+d to quit
+      break;
+    }
+    cout << r(s) << endl;
+    cin.clear();
+  }
+  SaveHistory(history_path);
+  return 0;
+}
+#+end_src

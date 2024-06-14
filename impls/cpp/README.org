@@ -184,7 +184,6 @@ std::vector<std::string_view> tokenize(std::string &input)
 class Value {
 };
 #+end_src
-
 * The Reader
 #+begin_src cpp :tangle ./src/reader.cpp :results none
 #include "reader.hpp"

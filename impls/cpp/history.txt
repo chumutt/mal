@@ -6,3 +6,6 @@ teet
 test
 (+ 1 2 3)
 (exit)
+test
+(+ 1 2 3)
+(exit)

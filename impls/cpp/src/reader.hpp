@@ -1,9 +1,11 @@
+int main() {
 #pragma once
 #include <iostream>
 #include <optional>
 #include <string>
 #include <string_view>
-using namespace std;
+
+#include "types.hpp"
 
 class Tokenizer {
 public:
@@ -101,9 +103,30 @@ public:
 
 private:
   string &m_input;
+  size_t m_index{ 0 };
+};
+
+class Reader {
+public:
+  Reader(std::vector<std::string_view> &tokens) : m_tokens{tokens} {}
+
+  std::optional<std::string_view> next() {
+    if (m_index < m_tokens.size())
+      return m_tokens.at(m_index++);
+    return {};
+  }
+
+  std::optional<std::string_view> peek() {
+    if (m_index < m_tokens.size())
+      return m_tokens.at(m_index++);
+    return {};
+  }
+
+private:
+  std::vector<std::string_view> &m_tokens;
   size_t m_index{0};
 };
 
-// Value *read_str(string &input) {
-//   // TODO: tokenize -> ast -> return ast
-// }
+std::vector<std::string_view> tokenize(std::string &input)
+return 0;
+}

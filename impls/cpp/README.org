@@ -14,12 +14,12 @@
 #+cite_export: nil
 * Build
 #+name: build
-#+begin_src sh :shebang #!/usr/bin/env sh :tangle ./build
+#+begin_src sh :shebang #!/usr/bin/env sh :tangle ./build :results none
 make ./
 #+end_src
 * Makefile
 #+name: Makefile
-#+begin_src makefile :tangle ./Makefile :session make
+#+begin_src makefile :tangle ./Makefile :session make :results none
 ##
 # chu lisp
 #
@@ -35,19 +35,23 @@ step1_read_print: src/step1_read_print.cpp
 	$(CXX) $(CXXFLAGS) -o step1_read_print src/step1_read_print.cpp
 # end
 #+end_src
+
 * Run
 #+name: run
 #+begin_src bash :shebang #!/bin/bash :tangle ./run
 exec $(dirname $0)/${STEP:-stepA_mal} "${@}"
 #+end_src
-* The Reader
+
+* The Reader Header
 #+name: reader.hpp
-#+begin_src cpp :tangle ./src/reader.hpp
+#+begin_src cpp :tangle ./src/reader.hpp :results none
 #pragma once
 #include <iostream>
 #include <optional>
 #include <string>
 #include <string_view>
+
+#include "types.hpp"
 
 class Tokenizer {
 public:
@@ -145,19 +149,81 @@ public:
 
 private:
   string &m_input;
+  size_t m_index{ 0 };
+};
+
+class Reader {
+public:
+  Reader(std::vector<std::string_view> &tokens) : m_tokens{tokens} {}
+
+  std::optional<std::string_view> next() {
+    if (m_index < m_tokens.size())
+      return m_tokens.at(m_index++);
+    return {};
+  }
+
+  std::optional<std::string_view> peek() {
+    if (m_index < m_tokens.size())
+      return m_tokens.at(m_index++);
+    return {};
+  }
+
+private:
+  std::vector<std::string_view> &m_tok
   size_t m_index{0};
 };
 
-// Value *read_str(string &input) {
-//   // TODO: tokenize -> ast -> return ast
-// }
+std::vector<std::string_view> tokenize(std::string &input)
 #+end_src
 
 #+RESULTS: reader.hpp
 
+* The Types
+#+begin_src cpp :tangle ./src/types.hpp :results none
+#pragma once
+class Value {
+};
+#+end_src
+
+* The Reader
+#+begin_src cpp :tangle ./src/reader.cpp :results none
+#include "reader.hpp"
+
+std::vector<std::string_view> tokenize(std::string) {
+  Tokenizer tokenizer{input};
+  std::vector<std::string_view> vector;
+  while (auto token = tokenizer.next()) {
+    vector.push_back(*token);
+  }
+  return vector;
+}
+
+Value *read_str(std::string &input) {
+  auto tokens = autotokenize(input);
+  Reader reader{tokens};
+  return read_form(reader);
+}
+
+Value *read_list(std::string &input) {
+  auto tokens = autotokenize(input);
+  Reader reader{tokens};
+  return read_list(reader);
+}
+
+Value *read_form(Reader &reader) {
+  auto token = reader.peek();
+
+  if (!token)
+    return nullptr;
+  switch (token[0]) {}
+}
+#+end_src
+
+#+RESULTS:
+
 * Step 0: REPL
 #+name: step0_repl.cpp
-#+begin_src cpp :tangle ./src/step0_repl.cpp
+#+begin_src cpp :tangle ./src/step0_repl.cpp :results none
 #include "./../linenoise.hpp"
 #include <iostream>
 #include <string>
@@ -195,7 +261,7 @@ int main() {
 
 * Step 1: READ and PRINT
 #+name: step1_read_print.cpp
-#+begin_src cpp :tangle ./src/step1_read_print.cpp
+#+begin_src cpp :tangle ./src/step1_read_print.cpp :results none
 #include "./../linenoise.hpp"
 #include "reader.hpp"
 #include <iostream>

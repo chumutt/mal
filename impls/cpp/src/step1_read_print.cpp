@@ -1,17 +1,23 @@
-#include "./../linenoise.hpp"
+#include "linenoise.hpp"
+#include "printer.hpp"
 #include "reader.hpp"
+#include "types.hpp"
 #include <iostream>
 #include <string>
+
 using namespace std;
 using namespace linenoise;
 
-string R(string s) { return s; }
-string E(string s) { return s; }
-string P(string s) { return s; }
+Value *R(string s) { return read_str(s); }
+
+Value *E(Value *s) { return s; }
+
+string P(Value *s) { return pr_str(s); }
 
 string r(string s) {
-  P(R(E(s)));
-  return P(s);
+  auto ast = R(s);
+  auto result = E(ast);
+  return P(result);
 }
 
 int main() {

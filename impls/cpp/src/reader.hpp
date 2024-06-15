@@ -1,17 +1,16 @@
-int main() {
 #pragma once
+
 #include <iostream>
 #include <optional>
 #include <string>
 #include <string_view>
-
-#include "types.hpp"
+#include <vector>
 
 class Tokenizer {
 public:
-  Tokenizer(string &input) : m_input{input} {}
-  optional<string_view> next() {
-    auto view = string_view(m_input);
+  Tokenizer(std::string &input) : m_input{input} {}
+  std::optional<std::string_view> next() {
+    auto view = std::string_view(m_input);
     while (m_index < m_input.length()) {
       char c = m_input.at(m_index);
       switch (c) {
@@ -53,7 +52,7 @@ public:
         }
         // If no ending double quote to pair with first double quote,
         // return whatever is left & EOF.
-        cout << "EOF\n";
+        std::cout << "EOF\n";
         return view.substr(start, m_index - start);
       }
       case ';': {
@@ -102,8 +101,8 @@ public:
   }
 
 private:
-  string &m_input;
-  size_t m_index{ 0 };
+  std::string &m_input;
+  size_t m_index{0};
 };
 
 class Reader {
@@ -127,6 +126,10 @@ private:
   size_t m_index{0};
 };
 
-std::vector<std::string_view> tokenize(std::string &input)
-return 0;
-}
+Value *read_str(std::string &input);
+
+Value *read_form(Reader &reader);
+
+ListValue *read_list(Reader &reader);
+
+Value *read_atom(Reader &reader);

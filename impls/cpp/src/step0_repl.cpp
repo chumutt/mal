@@ -1,4 +1,4 @@
-#include "./../linenoise.hpp"
+#include "linenoise.hpp"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -12,7 +12,6 @@ string r(string s) {
   P(R(E(s)));
   return P(s);
 }
-
 int main() {
   const auto history_path = "history.txt";
   LoadHistory(history_path);

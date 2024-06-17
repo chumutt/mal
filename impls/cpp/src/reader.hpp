@@ -112,7 +112,7 @@ public:
   }
 
 private:
-  std::string_view tonekize_symbol() {
+  std::string_view tokenize_symbol() {
     auto view = std::string_view(m_input);
     size_t start = m_index;
     bool done = false;

@@ -17,6 +17,7 @@ public:
 
     while (m_index < m_input.length()) {
       char c = m_input.at(m_index);
+
       switch (c) {
       case ' ':  // space
       case '\t': // tab

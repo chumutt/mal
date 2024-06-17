@@ -6,9 +6,36 @@
 #include <unordered_map>
 #include <vector>
 
+class ExceptionValue;
+
 class Value {
 public:
-  virtual std::string inspect() { assert(0); }
+  enum class Type {
+    Exception,
+    False,
+    Fn,
+    HashMap,
+    Integer,
+    Keyword,
+    List,
+    Nil,
+    String,
+    Symbol,
+    True,
+    Vector,
+  };
+
+  virtual Type type() const = 0;
+  virtual std::string inspect(bool print_readably=false) const = 0;
+
+  virtual bool is_exception() const { return false; }
+
+  virtual bool operator==(const Value *other) const { return this == other; }
+  bool operator!=(const Value *other) const { return !(*this == other); }
+
+  ExceptionValue *as_exception();
+
+  const ExceptionValue *as_exception() const;
 };
 
 class ListValue : public Value {
@@ -17,7 +44,7 @@ public:
 
   void push(Value *value) { m_list.push_back(value); }
 
-  virtual std::string inspect();
+  virtual std::string inspect(bool print_readably = false) const override;
 
 protected:
   std::vector<Value *> m_list{};

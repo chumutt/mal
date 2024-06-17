@@ -29,6 +29,10 @@ public:
   virtual std::string inspect(bool print_readably = false) const = 0;
 
   virtual bool is_exception() const { return false; }
+  virtual bool is_list() const { return false; }
+  virtual bool is_listy() const { return false; }
+  virtual bool is_nil() const { return false; }
+  virtual bool is_true() const { return false; }
 
   virtual bool operator==(const Value *other) const { return this == other; }
   bool operator!=(const Value *other) const { return !(*this == other); }
@@ -46,6 +50,8 @@ public:
 
   virtual Type type() const override { return Type::List; }
   virtual std::string inspect(bool print_readably = false) const override;
+  virtual bool is_list() const override { return true; }
+  virtual bool is_listy() const override { return true; }
 
   virtual bool operator==(const Value *) const override;
 
@@ -63,6 +69,11 @@ protected:
 class VectorValue : public ListValue {
 public:
   VectorValue(){};
+
+  virtual Type type() const override { return Type::Vector; }
+  virtual std::string inspect(bool print_readably = false) const override;
+  virtual bool is_list() const override { return false; }
+
   virtual std::string inspect();
 
 protected:

@@ -87,6 +87,9 @@ Value *read_form(Reader &reader) {
   case '{':
     return read_hash_map(reader);
   case '\'':
+  case '`':
+  case '~':
+  case '@':
     return read_quoted_value(reader);
   default:
     return read_atom(reader);

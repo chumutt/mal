@@ -139,6 +139,8 @@ Value *read_form(Reader &reader);
 
 Value *read_quoted_value(Reader &reader);
 
+Value *read_with_meta(Reader &reader);
+
 ListValue *read_list(Reader &reader);
 
 ListValue *read_vector(Reader &reader);

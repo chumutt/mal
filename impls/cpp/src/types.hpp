@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cassert>
+#include <functional>
+#include <iostream>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -126,7 +128,8 @@ public:
   std::string str() { return m_str; }
   bool matches(const char *str) const { return m_str == str; }
   virtual Type type() const override { return Type::Symbol; }
-  virtual std::string inspect(bool) const override { return str(); }
+  virtual std::string inspect(bool) const override {
+    return str(); }
 
 private:
   std::string m_str;

@@ -40,10 +40,11 @@ ListValue *read_list(Reader &reader) {
   while (auto token = reader.peek()) {
     if (*token == ")") {
       reader.next();
-      break;
+      return list;
     }
     list->push(read_form(reader));
   }
+  std::cerr << "EOF\n";
   return list;
 }
 

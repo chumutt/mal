@@ -1,2 +1,4 @@
 #include "printer.hpp"
-std::string pr_str(Value *value) { return value->inspect(); };
+using namespace std;
+
+string pr_str(Value *value) { return value->inspect(); };

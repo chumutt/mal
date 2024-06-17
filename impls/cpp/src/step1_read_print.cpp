@@ -6,15 +6,16 @@
 #include "reader.hpp"
 #include "types.hpp"
 
+using namespace std;
 using namespace linenoise;
 
-Value *READ(std::string s) { return read_str(s); }
+Value *READ(string s) { return read_str(s); }
 
 Value *EVAL(Value *s) { return s; }
 
-std::string PRINT(Value *s) { return pr_str(s); }
+string PRINT(Value *s) { return pr_str(s); }
 
-std::string rep(std::string s) {
+string rep(string s) {
   auto ast = READ(s);
   auto result = EVAL(ast);
   return PRINT(result);
@@ -23,15 +24,15 @@ std::string rep(std::string s) {
 int main() {
   const auto history_path = "history.txt";
   LoadHistory(history_path);
-  std::string s;
+  string s;
   for (;;) {
     auto quit = Readline("user> ", s);
     AddHistory(s.c_str());
     if (quit) { // ctrl+d to quit
       break;
     }
-    std::cout << rep(s) << std::endl;
-    std::cin.clear();
+    cout << rep(s) << endl;
+    cin.clear();
   }
   SaveHistory(history_path);
   return 0;

@@ -10,7 +10,8 @@
 
 class Tokenizer {
 public:
-  Tokenizer(std::string &input) : m_input{input} {}
+  Tokenizer(std::string &input)
+    : m_input{input} {}
 
   std::optional<std::string_view> next() {
     auto view = std::string_view(m_input);
@@ -74,34 +75,7 @@ public:
         }
         return view.substr(start, m_index - start);
       }
-      default: {
-        size_t start = m_index;
-        bool done = false;
-        while (!done && m_index < m_input.length()) {
-          c = m_input.at(m_index);
-          switch (c) {
-          case ' ':  // space
-          case '\t': // tab
-          case '\n': // new line
-          case '[':
-          case ']':
-          case '{':
-          case '}':
-          case '(':
-          case ')':
-          case '\'':
-          case '"':
-          case '`':
-          case ',':
-          case ';':
-            done = true;
-            break;
-          default:
-            ++m_index;
-          }
-        }
-        return view.substr(start, m_index - start);
-      }
+        // numbers here
       default: {
         return tokenize_symbol();
       }

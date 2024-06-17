@@ -38,9 +38,9 @@ Value *read_form(Reader &reader) {
   }
 }
 
-Value *read_string(Reader &reader) { return nullptr; };  // FIXME
-
-Value *read_integer(Reader &reader) { return nullptr; }; // FIXME
+// Value *read_string(Reader &reader) { return nullptr; };  // FIXME
+//
+// Value *read_integer(Reader &reader) { return nullptr; }; // FIXME
 
 Value *read_quoted_value(Reader &reader) {
   auto token = reader.peek();

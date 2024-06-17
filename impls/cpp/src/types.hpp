@@ -53,6 +53,8 @@ public:
   auto end() { return m_list.end(); }
 
   bool is_empty() const { return m_list.size() == 0; }
+  size_t size() const { return m_list.size(); }
+  Value *at(size_t index) const { return m_list.at(index); }
 
 protected:
   std::vector<Value *> m_list{};

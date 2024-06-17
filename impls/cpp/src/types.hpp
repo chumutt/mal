@@ -94,15 +94,23 @@ struct HashMapPred {
 class HashMapValue : public ListValue {
 public:
   HashMapValue() {}
+  virtual Type type() const override { return Type::HashMap; }
   virtual std::string inspect();
+
+  virtual bool operator==(const Value *) const override;
+
   void set(Value *key, Value *val) { m_map[key] = val; }
+
   Value *get(Value *key) {
     auto search = m_map.find(key);
-    if (search != m_map.end()) {
+    if (search != m_map.end())
       return search->second;
-      return nullptr;
-    }
+    return nullptr;
   }
+
+  auto begin() const { return m_map.begin(); }
+  auto end() const { return m_map.end(); }
+  size_t size() const { return m_map.size(); }
 
 private:
   std::unordered_map<Value *, Value *, HashMapHash, HashMapPred> m_map;

@@ -9,6 +9,17 @@
 #include <vector>
 
 class ExceptionValue;
+class FalseValue;
+class FnValue;
+class HashMapValue;
+class IntegerValue;
+class KeywordValue;
+class ListValue;
+class NilValue;
+class StringValue;
+class SymbolValue;
+class TrueValue;
+class VectorValue;
 
 class Value {
 public:
@@ -128,8 +139,7 @@ public:
   std::string str() { return m_str; }
   bool matches(const char *str) const { return m_str == str; }
   virtual Type type() const override { return Type::Symbol; }
-  virtual std::string inspect(bool) const override {
-    return str(); }
+  virtual std::string inspect(bool) const override { return str(); }
 
 private:
   std::string m_str;

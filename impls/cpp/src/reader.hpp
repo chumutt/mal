@@ -102,6 +102,9 @@ public:
         }
         return view.substr(start, m_index - start);
       }
+      default: {
+        return tokenize_symbol();
+      }
       }
     }
     return {}; // return nothing if no token (a.k.a. why 'optional<string_view>
@@ -109,6 +112,36 @@ public:
   }
 
 private:
+  std::string_view tonekize_symbol() {
+    auto view = std::string_view(m_input);
+    size_t start = m_index;
+    bool done = false;
+    char c;
+    while (!done && m_index < m_input.length()) {
+      c = m_input.at(m_index);
+      switch (c) {
+      case ' ':  // space
+      case '\t': // tab
+      case '\n': // new line
+      case '[':
+      case ']':
+      case '{':
+      case '}':
+      case '(':
+      case ')':
+      case '\'':
+      case '"':
+      case '`':
+      case ',':
+      case ';':
+        done = true;
+        break;
+      default:
+        ++m_index;
+      }
+    }
+    return view.substr(start, m_index - start);
+  }
   std::string &m_input;
   size_t m_index{0};
 };
@@ -133,6 +166,8 @@ private:
   std::vector<std::string_view> &m_tokens;
   size_t m_index{0};
 };
+
+std::vector<std::string_view> token(std::string &input);
 
 Value *read_str(std::string &input);
 

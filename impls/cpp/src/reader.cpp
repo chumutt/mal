@@ -1,7 +1,5 @@
 #include "reader.hpp"
-#include "types.hpp"
-
-std::vector<std::string_view> tokenize(std::string) {
+std::vector<std::string_view> tokenize(std::string &input) {
   Tokenizer tokenizer{input};
   std::vector<std::string_view> vector;
   while (auto token = tokenizer.next()) {
@@ -10,12 +8,12 @@ std::vector<std::string_view> tokenize(std::string) {
   return vector;
 }
 Value *read_str(std::string &input) {
-  auto tokens = autotokenize(input);
+  auto tokens = tokenize(input);
   Reader reader{tokens};
   return read_form(reader);
 }
 Value *read_list(std::string &input) {
-  auto tokens = autotokenize(input);
+  auto tokens = tokenize(input);
   Reader reader{tokens};
   return read_list(reader);
 }

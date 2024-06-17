@@ -22,13 +22,11 @@ private:
 };
 
 class SymbolValue : public Value {
-
 public:
   SymbolValue(std::string_view str) : m_str{str} {}
-  // copy when call str
   std::string str() { return m_str; }
 
-  virtual std::string inspect();
+  virtual std::string inspect() { return str(); }
 
 private:
   std::string m_str;

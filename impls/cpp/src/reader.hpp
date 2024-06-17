@@ -6,11 +6,15 @@
 #include <string_view>
 #include <vector>
 
+#include "types.hpp"
+
 class Tokenizer {
 public:
   Tokenizer(std::string &input) : m_input{input} {}
+
   std::optional<std::string_view> next() {
     auto view = std::string_view(m_input);
+
     while (m_index < m_input.length()) {
       char c = m_input.at(m_index);
       switch (c) {
@@ -18,12 +22,15 @@ public:
       case '\t': // tab
       case '\n': // new line
       case ',':  // comma
+        ++m_index;
         break;
       case '~': {
+        ++m_index;
         if (m_index + 1 < m_input.length() && m_input.at(m_index + 1) == '@') {
-          return view.substr(m_index++, 2);
-          return view.substr(m_index, 1);
+          ++m_index;
+          return view.substr(m_index - 2, 2);
         }
+        return view.substr(m_index - 1, 1);
       }
       case '[':  // open bracket
       case ']':  // closed bracket
@@ -35,7 +42,7 @@ public:
       case '`':  // backtick
       case '^':  // caret
       case '@':
-        return view.substr(m_index, 1);
+        return view.substr(m_index++, 1);
       case '"': {
         size_t start = m_index;
         ++m_index;
@@ -43,6 +50,7 @@ public:
           c = m_input.at(m_index);
           switch (c) {
           case '"':
+            ++m_index;
             return view.substr(start, m_index - start);
           case '\\':
             ++m_index;
@@ -94,7 +102,6 @@ public:
         return view.substr(start, m_index - start);
       }
       }
-      ++m_index; // skip whitespace
     }
     return {}; // return nothing if no token (a.k.a. why 'optional<string_view>
                // next()...' is necessary).
@@ -117,7 +124,7 @@ public:
 
   std::optional<std::string_view> peek() {
     if (m_index < m_tokens.size())
-      return m_tokens.at(m_index++);
+      return m_tokens.at(m_index);
     return {};
   }
 

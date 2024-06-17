@@ -1,37 +1,37 @@
+#include <iostream>
+#include <string>
+
 #include "linenoise.hpp"
 #include "printer.hpp"
 #include "reader.hpp"
 #include "types.hpp"
-#include <iostream>
-#include <string>
 
-using namespace std;
 using namespace linenoise;
 
-Value *R(string s) { return read_str(s); }
+Value *READ(std::string s) { return read_str(s); }
 
-Value *E(Value *s) { return s; }
+Value *EVAL(Value *s) { return s; }
 
-string P(Value *s) { return pr_str(s); }
+std::string PRINT(Value *s) { return pr_str(s); }
 
-string r(string s) {
-  auto ast = R(s);
-  auto result = E(ast);
-  return P(result);
+std::string rep(std::string s) {
+  auto ast = READ(s);
+  auto result = EVAL(ast);
+  return PRINT(result);
 }
 
 int main() {
   const auto history_path = "history.txt";
   LoadHistory(history_path);
-  string s;
+  std::string s;
   for (;;) {
     auto quit = Readline("user> ", s);
     AddHistory(s.c_str());
     if (quit) { // ctrl+d to quit
       break;
     }
-    cout << r(s) << endl;
-    cin.clear();
+    std::cout << rep(s) << std::endl;
+    std::cin.clear();
   }
   SaveHistory(history_path);
   return 0;

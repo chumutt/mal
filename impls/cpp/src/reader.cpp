@@ -15,10 +15,84 @@ Value *read_str(std::string &input) {
   return read_form(reader);
 }
 
-Value *read_list(std::string &input) {
-  auto tokens = tokenize(input);
-  Reader reader{tokens};
-  return read_list(reader);
+Value *read_form(Reader &reader) {
+  auto token = reader.peek();
+  if (!token)
+    return nullptr;
+  switch (token.value()[0]) {
+  case '(':
+    return read_list(reader);
+  case '[':
+    return read_vector(reader);
+  case '{':
+    return read_hash_map(reader);
+  case '\'':
+  case '`':
+  case '~':
+  case '@':
+    return read_quoted_value(reader);
+  case '^':
+    return read_with_meta(reader);
+  default:
+    return read_atom(reader);
+  }
+}
+
+Value *read_string(Reader &reader) { return nullptr; };  // FIXME
+Value *read_integer(Reader &reader) { return nullptr; }; // FIXME
+
+Value *read_quoted_value(Reader &reader) {
+  auto token = reader.peek();
+  switch (token.value()[0]) {
+  case '\'': {
+    reader.next(); // consume quote
+    auto list = new ListValue{};
+    list->push(new SymbolValue{"quote"});
+    list->push(read_form(reader));
+    return list;
+  }
+  case '`': {
+    reader.next(); // consume quote
+    auto list = new ListValue{};
+    list->push(new SymbolValue{"quasiquote"});
+    list->push(read_form(reader));
+    return list;
+  }
+  case '~': {
+    if (token.value().length() > 1 && token.value()[1] == '@') {
+      reader.next();
+      auto list = new ListValue{};
+      list->push(new SymbolValue{"splice-unquote"});
+      return list;
+    } else {
+      reader.next();
+      auto list = new ListValue{};
+      list->push(new SymbolValue{"unquote"});
+      list->push(read_form(reader));
+      return list;
+    }
+  }
+  case '@': {
+    reader.next();
+    auto list = new ListValue{};
+    list->push(new SymbolValue{"deref"});
+    list->push(read_form(reader));
+    return list;
+  }
+  default:
+    std::cerr << "bad quote!\n";
+    abort();
+  }
+}
+
+Value *read_with_meta(Reader &reader) {
+  reader.next(); // slurp '^' (caret)
+  auto *list = new ListValue{};
+  auto meta = read_form(reader);
+  auto value = read_form(reader);
+  list->push(value);
+  list->push(meta);
+  return list;
 }
 
 ListValue *read_list(Reader &reader) {
@@ -73,70 +147,6 @@ HashMapValue *read_hash_map(Reader &reader) {
   }
   std::cerr << "EOF\n";
   return map;
-}
-
-Value *read_form(Reader &reader) {
-  auto token = reader.peek();
-  if (!token)
-    return nullptr;
-  switch (token.value()[0]) {
-  case '(':
-    return read_list(reader);
-  case '[':
-    return read_vector(reader);
-  case '{':
-    return read_hash_map(reader);
-  case '\'':
-  case '`':
-  case '~':
-  case '@':
-    return read_quoted_value(reader);
-  default:
-    return read_atom(reader);
-  }
-}
-Value *read_quoted_value(Reader &reader) {
-  auto token = reader.peek();
-  switch (token.value()[0]) {
-  case '\'': {
-    reader.next(); // consume quote
-    auto list = new ListValue{};
-    list->push(new SymbolValue{"quote"});
-    list->push(read_form(reader));
-    return list;
-  }
-  case '`': {
-    reader.next(); // consume quote
-    auto list = new ListValue{};
-    list->push(new SymbolValue{"quasiquote"});
-    list->push(read_form(reader));
-    return list;
-  }
-  case '~': {
-    if (token.value().length() > 1 && token.value()[1] == '@') {
-      reader.next();
-      auto list = new ListValue{};
-      list->push(new SymbolValue{"splice-unquote"});
-      return list;
-    } else {
-      reader.next();
-      auto list = new ListValue{};
-      list->push(new SymbolValue{"unquote"});
-      list->push(read_form(reader));
-      return list;
-    }
-  }
-  case '@': {
-    reader.next();
-    auto list = new ListValue{};
-    list->push(new SymbolValue{"deref"});
-    list->push(read_form(reader));
-    return list;
-  }
-  default:
-    std::cerr << "bad quote!\n";
-    abort();
-  }
 }
 
 Value *read_atom(Reader &reader) { return new SymbolValue{*reader.next()}; }

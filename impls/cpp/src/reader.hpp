@@ -137,6 +137,12 @@ Value *read_str(std::string &input);
 
 Value *read_form(Reader &reader);
 
+Value *read_quoted_value(Reader &reader);
+
 ListValue *read_list(Reader &reader);
+
+ListValue *read_vector(Reader &reader);
+
+HashMapValue *read_hash_map(Reader &reader);
 
 Value *read_atom(Reader &reader);

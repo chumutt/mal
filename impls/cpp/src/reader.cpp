@@ -64,6 +64,7 @@ Value *read_quoted_value(Reader &reader) {
       reader.next();
       auto list = new ListValue{};
       list->push(new SymbolValue{"splice-unquote"});
+      list->push(read_form(reader));
       return list;
     } else {
       reader.next();

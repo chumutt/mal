@@ -1,18 +1,20 @@
 #include "reader.hpp"
-std::vector<std::string_view> tokenize(std::string &input) {
+using namespace std;
+
+vector<string_view> tokenize(string &input) {
   Tokenizer tokenizer{input};
-  std::vector<std::string_view> vector;
+  vector<string_view> vector;
   while (auto token = tokenizer.next()) {
     vector.push_back(*token);
   }
   return vector;
 }
-Value *read_str(std::string &input) {
+Value *read_str(string &input) {
   auto tokens = tokenize(input);
   Reader reader{tokens};
   return read_form(reader);
 }
-Value *read_list(std::string &input) {
+Value *read_list(string &input) {
   auto tokens = tokenize(input);
   Reader reader{tokens};
   return read_list(reader);

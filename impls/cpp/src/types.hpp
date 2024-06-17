@@ -45,10 +45,10 @@ struct HashMapPred {
 
 class HashMapValue : public ListValue {
 public:
-  HashMapValue(){};
+  HashMapValue() {}
   virtual std::string inspect();
   void set(Value *key, Value *val) { m_map[key] = val; }
-  Value* get(Value *key) {
+  Value *get(Value *key) {
     auto search = m_map.find(key);
     if (search != m_map.end()) {
       return search->second;
@@ -62,7 +62,6 @@ private:
 protected:
   std::vector<Value *> m_list{};
 };
-
 class SymbolValue : public Value {
 public:
   SymbolValue(std::string_view str) : m_str{str} {}

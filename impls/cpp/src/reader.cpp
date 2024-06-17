@@ -97,15 +97,43 @@ Value *read_quoted_value(Reader &reader) {
   switch (token.value()[0]) {
   case '\'': {
     reader.next(); // consume quote
-    auto list = new ListValue {};
-    list->push(new SymbolValue { "quote" });
+    auto list = new ListValue{};
+    list->push(new SymbolValue{"quote"});
     list->push(read_form(reader));
     return list;
   }
-  default: {
-    std::cerr << "badquote!\n";
+  case '`': {
+    reader.next(); // consume quote
+    auto list = new ListValue{};
+    list->push(new SymbolValue{"quasiquote"});
+    list->push(read_form(reader));
+    return list;
+  }
+  case '~': {
+    if (token.value().length() > 1 && token.value()[1] == '@') {
+      reader.next();
+      auto list = new ListValue{};
+      list->push(new SymbolValue{"splice-unquote"});
+      return list;
+    } else {
+      reader.next();
+      auto list = new ListValue{};
+      list->push(new SymbolValue{"unquote"});
+      list->push(read_form(reader));
+      return list;
+    }
+  }
+  case '@': {
+    reader.next();
+    auto list = new ListValue{};
+    list->push(new SymbolValue{"deref"});
+    list->push(read_form(reader));
+    return list;
+  }
+  default:
+    std::cerr << "bad quote!\n";
     abort();
   }
-  }
 }
+
 Value *read_atom(Reader &reader) { return new SymbolValue{*reader.next()}; }

@@ -118,13 +118,15 @@ private:
 protected:
   std::vector<Value *> m_list{};
 };
+
 class SymbolValue : public Value {
 public:
   SymbolValue(std::string_view str) : m_str{str} {}
   // copy when call str
   std::string str() { return m_str; }
-
-  virtual std::string inspect() { return str(); }
+  bool matches(const char *str) const { return m_str == str; }
+  virtual Type type() const override { return Type::Symbol; }
+  virtual std::string inspect(bool) const override { return str(); }
 
 private:
   std::string m_str;

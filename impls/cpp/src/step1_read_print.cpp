@@ -4,13 +4,12 @@
 #include "linenoise.hpp"
 #include "printer.hpp"
 #include "reader.hpp"
-#include "types.hpp"
 
 Value *READ(std::string s) { return read_str(s); }
 
 Value *EVAL(Value *s) { return s; }
 
-std::string PRINT(Value *s) { return pr_str(s); }
+std::string PRINT(Value *s) { return pr_str(s, true); }
 
 std::string rep(std::string s) {
   auto ast = READ(s);

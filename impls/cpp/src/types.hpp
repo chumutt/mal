@@ -26,7 +26,7 @@ public:
   };
 
   virtual Type type() const = 0;
-  virtual std::string inspect(bool print_readably=false) const = 0;
+  virtual std::string inspect(bool print_readably = false) const = 0;
 
   virtual bool is_exception() const { return false; }
 
@@ -44,7 +44,15 @@ public:
 
   void push(Value *value) { m_list.push_back(value); }
 
+  virtual Type type() const override { return Type::List; }
   virtual std::string inspect(bool print_readably = false) const override;
+
+  virtual bool operator==(const Value *) const override;
+
+  auto begin() { return m_list.begin(); }
+  auto end() { return m_list.end(); }
+
+  bool is_empty() const { return m_list.size() == 0; }
 
 protected:
   std::vector<Value *> m_list{};

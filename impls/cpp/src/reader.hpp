@@ -173,6 +173,10 @@ Value *read_str(std::string &input);
 
 Value *read_form(Reader &reader);
 
+//Value *read_string(Reader &reader);
+
+// Value *read_integer(Reader &reader);
+
 Value *read_quoted_value(Reader &reader);
 
 Value *read_with_meta(Reader &reader);

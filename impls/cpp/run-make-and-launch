@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+make && ./step1_read_print.cpp

@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+make && cd ../../ && make "test^cpp^step1" && cd impls/cpp/

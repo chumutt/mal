@@ -20,7 +20,7 @@ int main() {
     if (quit) { // ctrl+d to quit
       break;
     }
-    std::cout << r(s) << std::endl;
+    std::cout << r(s) << "\n";
     std::cin.clear();
   }
   linenoise::SaveHistory(history_path);

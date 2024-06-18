@@ -10,8 +10,7 @@
 
 class Tokenizer {
 public:
-  Tokenizer(std::string &input)
-    : m_input{input} {}
+  Tokenizer(std::string &input) : m_input{input} {}
 
   std::optional<std::string_view> next() {
     auto view = std::string_view(m_input);
@@ -147,7 +146,7 @@ Value *read_str(std::string &input);
 
 Value *read_form(Reader &reader);
 
-//Value *read_string(Reader &reader);
+// Value *read_string(Reader &reader);
 
 // Value *read_integer(Reader &reader);
 

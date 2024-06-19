@@ -1,6 +1,6 @@
+#include "linenoise.hpp"
 #include <iostream>
 #include <string>
-#include "linenoise.hpp"
 
 std::string R(std::string s) { return s; }
 std::string E(std::string s) { return s; }

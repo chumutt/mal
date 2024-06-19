@@ -1,10 +1,9 @@
-#include <iostream>
-#include <string>
-
 #include "linenoise.hpp"
 #include "printer.hpp"
 #include "reader.hpp"
 #include "types.hpp"
+#include <iostream>
+#include <string>
 
 Value *READ(std::string s) { return read_str(s); }
 
@@ -21,7 +20,7 @@ std::string rep(std::string s) {
     auto result = EVAL(ast);
     return PRINT(result);
   } catch (ExceptionValue *exception) {
-    std::cerr << std::exception->message() << std::endl;
+    std::cerr << exception->message() << "\n";
     return "";
   }
 }
